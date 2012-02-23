@@ -34,6 +34,7 @@ public class Player extends Mob implements LootCollector {
 	public Keys keys;
 	public MouseButtons mouseButtons;
 	public int mouseFireButton = 1;
+	public int mouseUseButton = 3;
 	public Vec2 aimVector;
 	public IWeapon weapon;
 	private boolean mouseAiming;
@@ -111,6 +112,7 @@ public class Player extends Mob implements LootCollector {
 		MojamComponent.soundPlayer.playSound("/sound/levelUp.wav", (float) pos.x, (float) pos.y, true);
 	}
 
+	@Override
 	public void tick() {
 		calculLevel();
 
@@ -123,8 +125,10 @@ public class Player extends Mob implements LootCollector {
 		if (regenDelay > 0) {
 			regenDelay--;
 			if (regenDelay == 0) {
-				if (health < maxHealth)
+				if (health + 1 < maxHealth)
 					health++;
+				else if (health < maxHealth)
+					health = maxHealth;
 				regenDelay = REGEN_INTERVAL;
 			}
 		}
@@ -144,8 +148,10 @@ public class Player extends Mob implements LootCollector {
 		}
 		if (keys.up.isDown || keys.down.isDown || keys.left.isDown || keys.right.isDown) {
 			int stepCount = 25;
-			if (carrying == null) stepCount = 15;
-			if (isSprint) stepCount *= 0.6;
+			if (carrying == null)
+				stepCount = 15;
+			if (isSprint)
+				stepCount *= 0.6;
 			if (steps % stepCount == 0) {
 				MojamComponent.soundPlayer.playSound("/sound/Step " + (TurnSynchronizer.synchedRandom.nextInt(2) + 1) + ".wav", (float) pos.x, (float) pos.y, true);
 			}
@@ -295,9 +301,10 @@ public class Player extends Mob implements LootCollector {
 			carrying.setPos(pos.x, pos.y - 20);
 			carrying.tick();
 
-			if (keys.use.wasPressed()) {
+			if (keys.use.wasPressed() || mouseButtons.isDown(mouseUseButton)) {
 				Vec2 buildPos = pos.clone();
 				boolean allowed = true;
+				mouseButtons.setNextState(mouseUseButton, false);
 
 				if (allowed && (!(carrying instanceof IUsable) || (carrying instanceof IUsable && ((IUsable) carrying).isAllowedToCancel()))) {
 					carrying.removed = false;
@@ -327,12 +334,15 @@ public class Player extends Mob implements LootCollector {
 				((IUsable) selected).setHighlighted(true);
 			}
 
+			
+			
 			if (selected != null) {
 				if (selected.pos.distSqr(getInteractPosition()) > INTERACT_DISTANCE) {
 					((IUsable) selected).setHighlighted(false);
 					selected = null;
-				} else if (selected instanceof IUsable && keys.use.wasPressed()) {
+				} else if (selected instanceof IUsable && (keys.use.wasPressed() || mouseButtons.isDown(mouseUseButton))) {
 					((IUsable) selected).use(this);
+					mouseButtons.setNextState(mouseUseButton, false);
 				} else if (selected instanceof IUsable && keys.upgrade.wasPressed()) {
 					((IUsable) selected).upgrade(this);
 				}
@@ -384,6 +394,7 @@ public class Player extends Mob implements LootCollector {
 		score = 0;
 	}
 
+	@Override
 	public void render(Screen screen) {
 		Bitmap[][] sheet = Art.lordLard;
 		if (team == Team.Team2) {
@@ -417,11 +428,13 @@ public class Player extends Mob implements LootCollector {
 		renderCarrying(screen, (frame == 0 || frame == 3) ? -1 : 0);
 	}
 
+	@Override
 	public void collide(Entity entity, double xa, double ya) {
 		xd += xa * 0.4;
 		yd += ya * 0.4;
 	}
 
+	@Override
 	public void take(Loot loot) {
 		loot.remove();
 		level.addEntity(new Sparkle(pos.x, pos.y, -1, 0));
@@ -429,22 +442,27 @@ public class Player extends Mob implements LootCollector {
 		score += loot.getScoreValue();
 	}
 
+	@Override
 	public double getSuckPower() {
 		return suckRadius / 60.0;
 	}
 
+	@Override
 	public boolean canTake() {
 		return takeDelay > 0;
 	}
 
+	@Override
 	public void flash() {
 		flashTime = 20;
 	}
 
+	@Override
 	public int getScore() {
 		return score;
 	}
 
+	@Override
 	public Bitmap getSprite() {
 		return null;
 	}
@@ -485,11 +503,12 @@ public class Player extends Mob implements LootCollector {
 		this.isSeeing = b;
 	}
 
+	@Override
 	public void notifySucking() {
 	}
 
 	@Override
-	public void hurt(Entity source, int damage) {
+	public void hurt(Entity source, float damage) {
 		if (isImmortal) {
 			return;
 		}
@@ -522,6 +541,7 @@ public class Player extends Mob implements LootCollector {
 		hurt(bullet, 1);
 	}
 
+	@Override
 	public String getDeatchSound() {
 		return "/sound/Death.wav";
 	}

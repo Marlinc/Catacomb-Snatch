@@ -14,11 +14,12 @@ public class HostingWaitMenu extends GuiMenu {
 
 	public String myIpLAN;
 	public String myIpWAN;
+	private Button cancelButton;
 
 	public HostingWaitMenu() {
 		super();
 
-		addButton(new Button(TitleMenu.CANCEL_JOIN_ID, "Cancel", 364, 335));
+		cancelButton = (Button) addButton(new Button(TitleMenu.CANCEL_JOIN_ID, "Cancel", 364, 335));
 
 		searchIpLAN();
 		searchIpWAN();
@@ -31,8 +32,8 @@ public class HostingWaitMenu extends GuiMenu {
 		screen.blit(Art.emptyBackground, 0, 0);
 		Font.draw(screen, MojamComponent.texts.waitingForClient(), 100, 100);
 
-		Font.draw(screen, "Your LAN IP:" + myIpLAN, 100, 120);
-		Font.draw(screen, "Your WAN IP:" + myIpWAN, 100, 120);
+		Font.draw(screen, "Your internal IP:" + myIpLAN, 100, 120);
+		Font.draw(screen, "Your external IP:" + myIpWAN, 100, 140);
 
 		super.render(screen);
 	}
@@ -43,17 +44,21 @@ public class HostingWaitMenu extends GuiMenu {
 	}
 
 	@Override
-	public void keyPressed(KeyEvent arg0) {
+	public void keyPressed(KeyEvent e) {
+		// Cancel on Escape
+		
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			cancelButton.postClick();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
 		// nothing
 	}
 
 	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// nothing
-	}
-
-	@Override
-	public void keyTyped(KeyEvent arg0) {
+	public void keyTyped(KeyEvent e) {
 		// nothing
 	}
 

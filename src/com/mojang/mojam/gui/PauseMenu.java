@@ -17,19 +17,22 @@ public class PauseMenu extends GuiMenu {
 
 		resumeButton = (Button) addButton(new Button(TitleMenu.RETURN_ID,
 				"Resume", (gameWidth - 128) / 2, 200));
-		addButton(new Button(TitleMenu.RETURN_TO_TITLESCREEN, "Main menu",
+		addButton(new Button(TitleMenu.HOW_TO_PLAY, "Help menu",
 				(gameWidth - 128) / 2, 230));
+		addButton(new Button(TitleMenu.RETURN_TO_TITLESCREEN, "Main menu",
+				(gameWidth - 128) / 2, 260));
 	}
 
 	public void render(Screen screen) {
 
 		screen.clear(0);
+		screen.blit(Art.emptyBackground, 0, 0);
 		screen.blit(Art.pauseScreen, 0, 0);
 
 		super.render(screen);
 
 		screen.blit(Art.lordLard[0][6], (gameWidth - 128) / 2 - 40,
-				190 + selectedItem * 40);
+				190 + selectedItem * 30);
 	}
 
 	public void keyPressed(KeyEvent e) {
@@ -40,7 +43,7 @@ public class PauseMenu extends GuiMenu {
 			}
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			selectedItem++;
-			if (selectedItem > 1) {
+			if (selectedItem > 2) {
 				selectedItem = 0;
 			}
 		} else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
