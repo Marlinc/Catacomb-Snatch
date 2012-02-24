@@ -219,4 +219,14 @@ public abstract class Mob extends Entity {
 
 	public void onPickup() {
 	}
+	
+	@Override
+	protected boolean move(double xa, double ya) {
+		boolean data = super.move(xa, ya);
+		if (this.getClass().getName().endsWith("Player")) {
+			System.out.println(this.getClass().getName() + " moved to X: " + pos.x + " - Y: " + pos.y);
+		}
+		return data;
+	}
+
 }
