@@ -60,6 +60,7 @@ public abstract class Entity implements BBOwner {
 
 	protected boolean move(double xa, double ya) {
 		List<BB> bbs = level.getClipBBs(this);
+		System.out.println(this.getClass().getName() + " moved to X: " + xa + " - Y: " + ya);
 		if (physicsSlide) {
 			boolean moved = false;
 			if (!removed)
