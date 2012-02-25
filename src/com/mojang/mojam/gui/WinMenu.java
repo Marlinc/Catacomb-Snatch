@@ -23,24 +23,19 @@ public class WinMenu extends GuiMenu {
 		screen.clear(0);
 		screen.blit(Art.gameOverScreen, 0, 0);
 
-		String msg = "";
-		if (winningPlayer == 1)
-			msg = MojamComponent.texts.player1Win();
-		if (winningPlayer == 2)
-			msg = MojamComponent.texts.player2Win();
-		Font.draw(screen, msg, 180, 160);
+		Font.draw(screen, MojamComponent.texts.playerWin(winningPlayer), 180, 160);
 
 		super.render(screen);
 
 		if (winningPlayer == 1)
-			screen.blit(Art.lordLard[0][6], (gameWidth - 128) / 2 - 40, 190 + selectedItem * 40);
+			screen.blit(Art.getLocalPlayerArt()[0][6], (gameWidth - 128) / 2 - 40, 190 + selectedItem * 40);
 		if (winningPlayer == 2)
 			screen.blit(Art.herrSpeck[0][6], (gameWidth - 128) / 2 - 40, 190 + selectedItem * 40);
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_E) {
 			buttons.get(selectedItem).postClick();
 		}
 	}
