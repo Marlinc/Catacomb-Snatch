@@ -1,0 +1,10 @@
+MIDlet-Name: Catacomb Snatch
+MIDlet-1: Catacomb Snatch, /art/icon/icon32.png, com.mojang.mojam.MojamComponent
+MIDlet-Description: A game.
+MIDlet-Info-URL: https://github.com/Maescool/Catacomb-Snatch/
+MIDlet-Vendor: Maescool
+MIDlet-Version: 1.0.0
+MIDlet-Icon: /art/icon/icon32.png
+MIDlet-Permissions: javax.microedition.io.Connector.socket
+MIDlet-Jar-Size: 7247
+MIDlet-Jar-URL: http://ci.maescool.be/job/Catacomb-Snatch/lastSuccessfulBuild/artifact/build/libs/Catacomb-Snatch-1.0.0-SNAPSHOT.jar
